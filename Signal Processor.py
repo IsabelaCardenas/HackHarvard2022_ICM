@@ -109,7 +109,6 @@ while (True):
         
         #now we have to make these arrays the same size as the pre-set arrays
         #sum correlations and divide by 6 to get a number between 0 and 1
-        print(prob_of_one)
         prob_of_one += (correlation(CS_ax, one_ax))
         prob_of_one += (correlation(CS_ay, one_ay))
         prob_of_one += (correlation(CS_az, one_az))
@@ -118,7 +117,6 @@ while (True):
         prob_of_one += (correlation(CS_rz, one_rz))
         print(prob_of_one)
         
-        print(prob_of_zero)
         prob_of_zero += (correlation(CS_ax, zero_ax))
         prob_of_zero += (correlation(CS_ay, zero_ay))
         prob_of_zero += (correlation(CS_az, zero_az))
@@ -133,50 +131,5 @@ while (True):
         else:
             print("you wrote a 0")
     
-        #resetting values
-        currentSignal = []
-        CS_ax = []
-        CS_ay = []
-        CS_az = []
-        CS_rx = []
-        CS_ry = []
-        CS_rz = []
-        prob_of_one = 0
-        prob_of_zero = 0
-        for e in one_ax:
-            if e == 0:
-                one_ax.pop(one_ax.index(e))
-        for e in one_ay:
-            if e == 0:
-                one_ay.pop(one_ay.index(e))
-        for e in one_az:
-            if e == 0:
-                one_az.pop(one_az.index(e))
-        for e in one_rx:
-            if e == 0:
-                one_rx.pop(one_rx.index(e))
-        for e in one_ry:
-            if e == 0:
-                one_ry.pop(one_ry.index(e))
-        for e in one_rz:
-            if e == 0:
-                one_rz.pop(one_rz.index(e))
-        for e in zero_ax:
-            if e == 0:
-                zero_ax.pop(zero_ax.index(e))
-        for e in zero_ay:
-            if e == 0:
-                zero_ay.pop(zero_ay.index(e))
-        for e in zero_az:
-            if e == 0:
-                zero_az.pop(zero_az.index(e))
-        for e in zero_rx:
-            if e == 0:
-                zero_rx.pop(zero_rx.index(e))
-        for e in zero_ry:
-            if e == 0:
-                zero_ry.pop(zero_ry.index(e))
-        for e in zero_rz:
-            if e == 0:
-                zero_rz.pop(zero_rz.index(e))
+        
         
