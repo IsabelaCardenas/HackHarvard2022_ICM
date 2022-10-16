@@ -7,7 +7,7 @@ Created on Sat Oct 15 17:59:05 2022
 import requests
 import serial
 import numpy as np
-from scipy import signal
+import matplotlib.pyplot as plt
 
 #pre-set captured signals of a "1" and a "0" being drawn
 one_ax = [14488, 4072, 4108, 4420, 3584, 3896, 3080, 2892, 2680, 2224, -608, 2724, 1700, 2560, 2348, 4340, 2576, 3468, 1208, 2036, 2452, 2944, 3916, 3984, 3888, 2940, 3844, 3104, 3096, 3012, 3152, 3212, 3724, 3420]
@@ -40,6 +40,23 @@ ser = serial.Serial("COM9", 115200)
 #variables for similarity to 1 or 0!
 prob_of_one = 0
 prob_of_zero = 0
+
+def sameLength(list1, list2):
+    if (len(list1) > len(list2)):
+        while (len(list1) > len(list2)):
+            list2.append(0)
+    else:
+        while (len(list2) > len(list1)):
+            list1.append(0)
+    return None
+
+def correlation(list1, list2):
+    sameLength(list1, list2)
+    x_simple = np.array(list1)
+    y_simple = np.array(list2)
+    correlation = np.corrcoef(x_simple, y_simple)
+    corr = 1 - (correlation[0][0] * correlation[1][1] - correlation[0][1] * correlation[1][0])
+    return (corr)
 
 while (True):
     #printing serial monitor data from Teensy/ Arduino IDE
@@ -77,7 +94,6 @@ while (True):
         #Split this 2d array into 6 arrays to represent accleration in x, y, z, and rotation in x, y, z
         #currentSignal = currentSignal.pop()
 
-        print(currentSignal)
         for e in currentSignal:
             CS_ax.append(currentSignal[currentSignal.index(e)][0])
         for e in currentSignal:
@@ -92,6 +108,75 @@ while (True):
             CS_rz.append(currentSignal[currentSignal.index(e)][5])
         
         #now we have to make these arrays the same size as the pre-set arrays
+        #sum correlations and divide by 6 to get a number between 0 and 1
+        print(prob_of_one)
+        prob_of_one += (correlation(CS_ax, one_ax))
+        prob_of_one += (correlation(CS_ay, one_ay))
+        prob_of_one += (correlation(CS_az, one_az))
+        prob_of_one += (correlation(CS_rx, one_rx))
+        prob_of_one += (correlation(CS_ry, one_ry))
+        prob_of_one += (correlation(CS_rz, one_rz))
+        print(prob_of_one)
         
+        print(prob_of_zero)
+        prob_of_zero += (correlation(CS_ax, zero_ax))
+        prob_of_zero += (correlation(CS_ay, zero_ay))
+        prob_of_zero += (correlation(CS_az, zero_az))
+        prob_of_zero += (correlation(CS_rx, zero_rx))
+        prob_of_zero += (correlation(CS_ry, zero_ry))
+        prob_of_zero += (correlation(CS_rz, zero_rz))
+        print(prob_of_zero)
+        
+        
+        if (prob_of_one > prob_of_zero):
+            print("you wrote a 1")
+        else:
+            print("you wrote a 0")
     
-    
+        #resetting values
+        currentSignal = []
+        CS_ax = []
+        CS_ay = []
+        CS_az = []
+        CS_rx = []
+        CS_ry = []
+        CS_rz = []
+        prob_of_one = 0
+        prob_of_zero = 0
+        for e in one_ax:
+            if e == 0:
+                one_ax.pop(one_ax.index(e))
+        for e in one_ay:
+            if e == 0:
+                one_ay.pop(one_ay.index(e))
+        for e in one_az:
+            if e == 0:
+                one_az.pop(one_az.index(e))
+        for e in one_rx:
+            if e == 0:
+                one_rx.pop(one_rx.index(e))
+        for e in one_ry:
+            if e == 0:
+                one_ry.pop(one_ry.index(e))
+        for e in one_rz:
+            if e == 0:
+                one_rz.pop(one_rz.index(e))
+        for e in zero_ax:
+            if e == 0:
+                zero_ax.pop(zero_ax.index(e))
+        for e in zero_ay:
+            if e == 0:
+                zero_ay.pop(zero_ay.index(e))
+        for e in zero_az:
+            if e == 0:
+                zero_az.pop(zero_az.index(e))
+        for e in zero_rx:
+            if e == 0:
+                zero_rx.pop(zero_rx.index(e))
+        for e in zero_ry:
+            if e == 0:
+                zero_ry.pop(zero_ry.index(e))
+        for e in zero_rz:
+            if e == 0:
+                zero_rz.pop(zero_rz.index(e))
+        
