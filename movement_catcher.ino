@@ -11,7 +11,7 @@ int button1 = 1;
 int state = 0;
 int lastState;
 
-//signal to be stored and sent
+//signal to be stored and read
 int16_t dataSet[500][6];
 
 void setup() {
@@ -35,7 +35,7 @@ void loop() {
   
   //take readings while pressed
   int count = 0;
-  while (digitalRead(button1)  == 0){
+  while (digitalRead(button1) == 0){
     IMU.getMotion6(&ax, &ay, &az, &rx, &ry, &rz);
     int16_t dataPoint[6] = {ax, ay, az, rx, ry, rz};
     for (int e = 0; e < 6; e++){
@@ -43,7 +43,7 @@ void loop() {
     }
     count++;
     lastState = 1;
-    Serial.println("Reading Data");
+    
     delay(50);
   } 
   
@@ -56,6 +56,7 @@ void loop() {
 
 void printData() {
   // display tab-separated accel/gyro x/y/z values
+  
   for (int e = 0; e < 500; e++){
     for (int a = 0; a < 5; a++){
       Serial.print(dataSet[e][a]);
